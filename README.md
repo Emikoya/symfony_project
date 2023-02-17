@@ -8,3 +8,6 @@ Fonctionnalités :
 - Système de post et de sa visualisation
 - Utilisation d'un Bootstrap
 - API pour afficher la météo
+
+Liens d'une vidéo démonstrative :
+https://www.youtube.com/watch?v=rEEYb4IB4-0
