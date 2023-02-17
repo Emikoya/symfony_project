@@ -165,6 +165,9 @@
             You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
         </div>
     {% endif %}
+    <div style="display:flex; justify-content:left">
+        <button id="get-temperature" class="btn btn-primary btn-lg btn-block" style="font-size:15px">Obtenir la température à calais</button>
+    </div> 
     <div class="container">
         <div class="col-md-7">
             <div class="social-feed-separated">
@@ -230,16 +233,35 @@
                             </div>
                         </div>
                     {% endfor %}
-
-                    {# {% for i in range(0, messages|length - 1) %}
-                        {% if messages[i].id == 1 %}
-                            {{ messages[i].message }}
-                        {% endif %}
-                    {% endfor %} #}
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Récupérer le bouton
+    var btn = document.getElementById("get-temperature");
+
+    // Ajouter un événement onclick pour le bouton
+    btn.onclick = function () {
+        // Créer une requête AJAX pour appeler la méthode API
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '{{ path('app_api') }}', true);
+
+        // Gérer la réponse de la méthode API
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                // Afficher la réponse dans une alert box
+                alert(xhr.responseText);
+            }
+        };
+
+        // Envoyer la requête
+        xhr.send();
+    };
+</script>
+
 {% endblock %}
+
+

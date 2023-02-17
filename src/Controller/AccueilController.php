@@ -13,6 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AccueilController extends AbstractController
 {
@@ -69,5 +70,24 @@ class AccueilController extends AbstractController
         $entityManager->flush();
 
         return new RedirectResponse($this->generateUrl('app_accueil'));
+    }
+
+    /**
+     * @Route("/api", name="app_api")
+     */
+    public function api()
+    {
+        $city = 'Calais';
+        $key = '19dd3499a90fec0e7ec5f8ad05d8a0bd';
+
+        $url = 'https://api.openweathermap.org/data/2.5/weather?q=' . $city . '&appid=' . $key;
+
+        $data = json_decode(file_get_contents($url), true);
+
+        $temperaturef = $data['main']['temp'];
+
+        $temp = $temperaturef - 273.15;
+
+        return new JsonResponse("temperature a " . $city . " de " . $temp);
     }
 }
