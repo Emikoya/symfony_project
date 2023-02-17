@@ -4,17 +4,242 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .pseudo-profile{
+        text-align:center;
+        font-size:20px;
+        color:red;
+    }
+
+    .body{margin-top:20px;
+    background:#eee;
+    }
+    /* Social feed */
+    .social-feed-separated .social-feed-box {
+    margin-left: 62px;
+    }
+    .social-feed-separated .social-avatar {
+    float: left;
+    padding: 0;
+    }
+    .social-feed-separated .social-avatar img {
+    width: 52px;
+    height: 52px;
+    border: 1px solid #e7eaec;
+    }
+    .social-feed-separated .social-feed-box .social-avatar {
+    padding: 15px 15px 0 15px;
+    float: none;
+    }
+    .social-feed-box {
+    /*padding: 15px;*/
+    border: 1px solid #e7eaec;
+    background: #fff;
+    margin-bottom: 15px;
+    }
+    .article .social-feed-box {
+    margin-bottom: 0;
+    border-bottom: none;
+    }
+    .article .social-feed-box:last-child {
+    margin-bottom: 0;
+    border-bottom: 1px solid #e7eaec;
+    }
+    .article .social-feed-box p {
+    font-size: 13px;
+    line-height: 18px;
+    }
+    .social-action {
+    margin: 15px;
+    }
+    .social-avatar {
+    padding: 15px 15px 0 15px;
+    }
+    .social-comment .social-comment {
+    margin-left: 45px;
+    }
+    .social-avatar img {
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    }
+    .social-avatar .media-body a {
+    font-size: 14px;
+    display: block;
+    }
+    .social-body {
+    padding: 15px;
+    }
+    .social-body img {
+    margin-bottom: 10px;
+    }
+    .social-footer {
+    border-top: 1px solid #e7eaec;
+    padding: 10px 15px;
+    background: #f9f9f9;
+    }
+    .social-footer .social-comment img {
+    width: 32px;
+    margin-right: 10px;
+    }
+    .social-comment:first-child {
+    margin-top: 0;
+    }
+    .social-comment {
+    margin-top: 15px;
+    }
+    .social-comment textarea {
+    font-size: 12px;
+    }
+
+
+    .form-control, .single-line {
+        background-color: #FFFFFF;
+        background-image: none;
+        border: 1px solid #e5e6e7;
+        border-radius: 1px;
+        color: inherit;
+        display: block;
+        padding: 6px 12px;
+        transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+        width: 100%;
+        font-size: 14px;
+    }
+
+
+    .ibox {
+    clear: both;
+    margin-bottom: 25px;
+    margin-top: 0;
+    padding: 0;
+    }
+    .ibox.collapsed .ibox-content {
+    display: none;
+    }
+    .ibox.collapsed .fa.fa-chevron-up:before {
+    content: "\f078";
+    }
+    .ibox.collapsed .fa.fa-chevron-down:before {
+    content: "\f077";
+    }
+    .ibox:after,
+    .ibox:before {
+    display: table;
+    }
+    .ibox-title {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #ffffff;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 3px 0 0;
+    color: inherit;
+    margin-bottom: 0;
+    padding: 14px 15px 7px;
+    min-height: 48px;
+    }
+    .ibox-content {
+    background-color: #ffffff;
+    color: inherit;
+    padding: 15px 20px 20px 20px;
+    border-color: #e7eaec;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0;
+    }
+    .ibox-footer {
+    color: inherit;
+    border-top: 1px solid #e7eaec;
+    font-size: 90%;
+    background: #ffffff;
+    padding: 10px 15px;
+    }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="body">
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+    <div class="container">
+        <div class="col-md-7">
+            <div class="social-feed-separated">
+                <div class="social-feed-box">
+                    <form method="post" action="{{ path('app_post') }}">
+                        <textarea class="form-control" placeholder="Envoyer un post..." name="post" id="inputPost"></textarea>
+                        <input type="text" hidden value="{{ app.user.userIdentifier }}" name="mail" id="inputMail"/>
+                        <div style="display:flex; justify-content:center">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" style="font-size:15px">Envoyer</button>
+                        </div> 
+                    </form>
+                </div>
+                    {% for i in range(0, messages|length - 1) %}
+                        <div class="social-feed-box">
+                            <div class="social-avatar">
+                                <div class="pseudo-profile">
+                                    {% for j in range(0, users|length - 1) %}
+                                        {% if users[j].id == messages[i].auteur.id %}
+                                            {{ users[j].pseudo }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/flori/OneDrive/Bureau/cours/iut/symfony/symfony_project/src/Controller/AccueilController.php'|file_link(0) }}">src/Controller/AccueilController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/flori/OneDrive/Bureau/cours/iut/symfony/symfony_project/templates/accueil/index.html.twig'|file_link(0) }}">templates/accueil/index.html.twig</a></code></li>
-    </ul>
+                            <div class="social-body">
+                                <p>
+                                    {{ messages[i].message }}
+                                </p>
+                                {# <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-responsive"> #}
+                            </div>
+
+                            <div class="social-footer">
+                                {% for k in range(0, reponses|length - 1) %}
+                                    {% if reponses[k].message.id == messages[i].id %}
+                                        <div class="social-comment">
+                                            <div class="media-body">
+                                                <div class="pseudo-profile">
+                                                    {% for l in range(0, users|length - 1) %}
+                                                        {% if users[l].id == reponses[k].auteur.id %}
+                                                            {{ users[l].pseudo }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                {{ reponses[k].reponse }}
+                                                <br>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                                <div class="social-comment">
+                                    <div class="media-body">
+                                        <form method="post" action="{{ path('app_comment') }}">
+                                            <textarea class="form-control" placeholder="Envoyer un Commentaire..." name="comment" id="inputComment"></textarea>
+                                            <input type="text" hidden value="{{ app.user.userIdentifier }}" name="mail" id="inputMail"/>
+                                            <input type="text" hidden value="{{ messages[i].id }}" name="message" id="inputMessage"/>
+                                            <div style="display:flex; justify-content:center">
+                                                <button type="submit" class="btn btn-primary btn-lg btn-block" style="font-size:15px">Envoyer</button>
+                                            </div> 
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {# {% for i in range(0, messages|length - 1) %}
+                        {% if messages[i].id == 1 %}
+                            {{ messages[i].message }}
+                        {% endif %}
+                    {% endfor %} #}
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
